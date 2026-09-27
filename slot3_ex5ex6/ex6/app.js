@@ -5,8 +5,19 @@ const port = 3000;
 
 app.use(express.json());
 
-const articles = require('./articles');
-const videos = require('./videos');
+const articleRouter = require('./routers/articleRouter');
+const videoRouter = require('./routers/videoRouter');
+
+app.use('/articles', articleRouter);
+app.use('/videos', videoRouter);
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+
+    res.status(500).json({
+        message: err.message
+    });
+});
 
 app.get('/articles', (req, res) => {
     res.json(articles);
