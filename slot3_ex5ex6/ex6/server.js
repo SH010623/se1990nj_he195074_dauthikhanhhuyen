@@ -1,15 +1,16 @@
-const express = require("express");
-const fs = require("fs");
+const express = require('express');
+const fs = require('fs');
 
 const app = express();
+const port = 3000;
 
 app.use(express.json());
 
-app.get("/data", (req, res) => {
-    fs.readFile("data.json", "utf8", (err, data) => {
+app.get('/data', (req, res) => {
+    fs.readFile('data.json', 'utf8', (err, data) => {
         if (err) {
             return res.status(500).json({
-                error: "Cannot read data"
+                message: err.message
             });
         }
 
@@ -17,24 +18,26 @@ app.get("/data", (req, res) => {
     });
 });
 
-app.post("/update", (req, res) => {
+app.post('/update', (req, res) => {
+    const newData = req.body;
+
     fs.writeFile(
-        "data.json",
-        JSON.stringify(req.body, null, 2),
+        'data.json',
+        JSON.stringify(newData, null, 2),
         (err) => {
             if (err) {
                 return res.status(500).json({
-                    error: "Cannot update data"
+                    message: err.message
                 });
             }
 
             res.json({
-                message: "Data updated successfully"
+                message: 'Data updated successfully!'
             });
         }
     );
 });
 
-app.listen(3000, () => {
-    console.log("Server is running at http://localhost:3000");
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });
